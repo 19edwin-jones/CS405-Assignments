@@ -71,7 +71,6 @@ T subtract_numbers(T const& start, T const& decrement, unsigned long int const& 
         if constexpr (std::is_integral<T>::value) {
             if (decrement > 0 && result < std::numeric_limits<T>::min() + decrement)
             {
-                result -= decrement;
                 throw std::underflow_error("Integer underflow");
             }
         }
@@ -79,7 +78,6 @@ T subtract_numbers(T const& start, T const& decrement, unsigned long int const& 
         else if constexpr (std::is_floating_point<T>::value) {
             result -= decrement;
             if (std::isinf(result)) {
-                result -= decrement;
                 throw std::overflow_error("Floating-point underflow");
             }
             continue;
