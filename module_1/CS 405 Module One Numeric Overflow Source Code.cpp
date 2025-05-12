@@ -7,45 +7,85 @@
 /// <summary>
 /// Template function to abstract away the logic of:
 ///   start + (increment * steps)
+///   Assumes: increment >= 0.
 /// </summary>
 /// <typeparam name="T">A type that with basic math functions</typeparam>
 /// <param name="start">The number to start with</param>
 /// <param name="increment">How much to add each step</param>
 /// <param name="steps">The number of steps to iterate</param>
 /// <returns>start + (increment * steps)</returns>
+/// <throws>std::overflow_error</throws>
 template <typename T>
 T add_numbers(T const& start, T const& increment, unsigned long int const& steps)
 {
-    T result = start;
+    // Ensure T is an integral or floating-point type
+    static_assert(std::is_arithmetic<T>::value, "T must be an arithmetic type");
 
-    for (unsigned long int i = 0; i < steps; ++i)
-    {
+    T result = start;
+    if (steps == 0)
+        return result;
+
+    for (unsigned long i = 0; i < steps; ++i) {
+        // Data type is an integral
+        if constexpr (std::is_integral<T>::value) {
+            if (increment > 0 && result > std::numeric_limits<T>::max() - increment) {
+                throw std::overflow_error("Integer overflow");
+            }
+        }
+        // Data type is a floating-point
+        else if constexpr (std::is_floating_point<T>::value)  {
+            result += increment;
+            if (std::isinf(result)) {
+                throw std::overflow_error("Floating-point overflow");
+            }
+            continue;
+        }
         result += increment;
     }
-
     return result;
 }
 
 /// <summary>
 /// Template function to abstract away the logic of:
 ///   start - (increment * steps)
+///   Assumes: increment >= 0.
 /// </summary>
 /// <typeparam name="T">A type that with basic math functions</typeparam>
 /// <param name="start">The number to start with</param>
 /// <param name="increment">How much to subtract each step</param>
 /// <param name="steps">The number of steps to iterate</param>
 /// <returns>start - (increment * steps)</returns>
-
+/// <throws>std::underflow_error</throws>
 template <typename T>
 T subtract_numbers(T const& start, T const& decrement, unsigned long int const& steps)
 {
-    T result = start;
+    // Ensure T is an integral or floating-point type
+    static_assert(std::is_arithmetic<T>::value, "T must be an arithmetic type");
 
-    for (unsigned long int i = 0; i < steps; ++i)
-    {
+    T result = start;
+    if (steps == 0)
+        return result;
+
+    for (unsigned long i = 0; i < steps; ++i) {
+        // Data type is an integral
+        if constexpr (std::is_integral<T>::value) {
+            if (decrement > 0 && result < std::numeric_limits<T>::min() + decrement)
+            {
+                result -= decrement;
+                throw std::underflow_error("Integer underflow");
+            }
+        }
+        // Data type is a floating-point
+        else if constexpr (std::is_floating_point<T>::value) {
+            result -= decrement;
+            if (std::isinf(result)) {
+                result -= decrement;
+                throw std::overflow_error("Floating-point underflow");
+            }
+            continue;
+        }
         result -= decrement;
     }
-
     return result;
 }
 
@@ -59,16 +99,16 @@ void test_overflow()
 {
     // TODO: The add_numbers template function will overflow in the second method call
     //        You need to change the add_numbers method to:
-    //        1. Detect when an overflow will happen
-    //        2. Prevent it from happening
-    //        3. Return the correct value when no overflow happened or
-    //        4. Return something to tell test_overflow the addition failed
+    //        1. Detect when an overflow will happen✓
+    //        2. Prevent it from happening✓
+    //        3. Return the correct value when no overflow happened or✓
+    //        4. Return something to tell test_overflow the addition failed✓
     //        NOTE: The add_numbers method must remain a template in the NumericFunctions header.
     //
     //        You need to change the test_overflow method to:
-    //        1. Detect when an add_numbers failed
-    //        2. Inform the user the overflow happened
-    //        3. A successful result displays the same result as before you changed the method
+    //        1. Detect when an add_numbers failed✓
+    //        2. Inform the user the overflow happened✓
+    //        3. A successful result displays the same result as before you changed the method✓
     //        NOTE: You cannot change anything between START / END DO NOT CHANGE
     //              The test_overflow method must remain a template in the NumericOverflows source file
     //
@@ -86,13 +126,33 @@ void test_overflow()
     std::cout << "Overflow Test of Type = " << typeid(T).name() << std::endl;
     // END DO NOT CHANGE
 
-    std::cout << "\tAdding Numbers Without Overflow (" << +start << ", " << +increment << ", " << steps << ") = ";
-    T result = add_numbers<T>(start, increment, steps);
-    std::cout << +result << std::endl;
+    // Test without overflow
+    bool overflowed = false;
+    T result{};
 
+    std::cout << "\tAdding Numbers Without Overflow (" << +start << ", " << +increment << ", " << steps << ") = ";
+    try {
+        result = add_numbers<T>(start, increment, steps);
+        std::cout << +result;
+    }
+    catch (const std::overflow_error &) {
+        overflowed = true;
+        std::cout << "N/A";
+    }
+    std::cout << " | Overflow: " << std::boolalpha << overflowed << std::endl;
+
+    // Test with overflow
+    overflowed = false;
     std::cout << "\tAdding Numbers With Overflow (" << +start << ", " << +increment << ", " << (steps + 1) << ") = ";
-    result = add_numbers<T>(start, increment, steps + 1);
-    std::cout << +result << std::endl;
+    try {
+        result = add_numbers<T>(start, increment, steps + 1);
+        std::cout << +result;
+    }
+    catch (const std::overflow_error &) {
+        overflowed = true;
+        std::cout << "N/A";
+    }
+    std::cout << " | Overflow: " << std::boolalpha << overflowed << std::endl;
 }
 
 template <typename T>
@@ -100,16 +160,16 @@ void test_underflow()
 {
     // TODO: The subtract_numbers template function will underflow in the second method call
     //        You need to change the subtract_numbers method to:
-    //        1. Detect when an underflow will happen
-    //        2. Prevent it from happening
-    //        3. Return the correct value when no underflow happened or
-    //        4. Return something to tell test_underflow the subtraction failed
+    //        1. Detect when an underflow will happen✓
+    //        2. Prevent it from happening✓
+    //        3. Return the correct value when no underflow happened or✓
+    //        4. Return something to tell test_underflow the subtraction failed✓
     //        NOTE: The subtract_numbers method must remain a template in the NumericFunctions header.
     //
     //        You need to change the test_underflow method to:
-    //        1. Detect when an subtract_numbers failed
-    //        2. Inform the user the underflow happened
-    //        3. A successful result displays the same result as before you changed the method
+    //        1. Detect when an subtract_numbers failed✓
+    //        2. Inform the user the underflow happened✓
+    //        3. A successful result displays the same result as before you changed the method✓
     //        NOTE: You cannot change anything between START / END DO NOT CHANGE
     //              The test_underflow method must remain a template in the NumericOverflows source file
     //
@@ -127,13 +187,32 @@ void test_underflow()
     std::cout << "Underflow Test of Type = " << typeid(T).name() << std::endl;
     // END DO NOT CHANGE
 
-    std::cout << "\tSubtracting Numbers Without Overflow (" << +start << ", " << +decrement << ", " << steps << ") = ";
-    auto result = subtract_numbers<T>(start, decrement, steps);
-    std::cout << +result << std::endl;
+    bool underflowed = false;
+    T result{};
 
-    std::cout << "\tSubtracting Numbers With Overflow (" << +start << ", " << +decrement << ", " << (steps + 1) << ") = ";
-    result = subtract_numbers<T>(start, decrement, steps + 1);
-    std::cout << +result << std::endl;
+    std::cout << "\tSubtracting Numbers Without Underflow (" << +start << ", " << +decrement << ", " << steps << ") = ";
+    try {
+        result = subtract_numbers<T>(start, decrement, steps);
+        std::cout << +result;
+    }
+    catch (const std::underflow_error &)
+    {
+        underflowed = true;
+        std::cout << "N/A";
+    }
+    std::cout << " | Underflow: " << std::boolalpha << underflowed << std::endl;
+
+    underflowed = false;
+    std::cout << "\tSubtracting Numbers With Underflow (" << +start << ", " << +decrement << ", " << (steps + 1) << ") = ";
+    try {
+        result = subtract_numbers<T>(start, decrement, steps + 1);
+        std::cout << +result;
+    }
+    catch (const std::underflow_error &) {
+        underflowed = true;
+        std::cout << "N/A";
+    }
+    std::cout << " | Underflow: " << std::boolalpha << underflowed << std::endl;
 }
 
 void do_overflow_tests(const std::string& star_line)
