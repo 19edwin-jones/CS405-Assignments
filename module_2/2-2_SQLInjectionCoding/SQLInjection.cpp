@@ -75,12 +75,33 @@ bool initialize_database(sqlite3* db)
 
 bool run_query(sqlite3* db, const std::string& sql, std::vector< user_record >& records)
 {
-  // TODO: Fix this method to fail and display an error if there is a suspected SQL Injection
+  // TODO: Fix this method to fail and display an error if there is a suspected SQL Injection✓
   //  NOTE: You cannot just flag 1=1 as an error, since 2=2 will work just as well. You need
   //  something more generic
 
   // clear any prior results
   records.clear();
+
+  std::string lower_sql = sql; // copy to perform case-insensitive checks with
+  std::transform(lower_sql.begin(), lower_sql.end(), lower_sql.begin(), ::tolower);
+
+  // Checks for common injection patterns
+  bool has_logic = lower_sql.find(" or ") != std::string::npos
+                || lower_sql.find(" and ") != std::string::npos;
+
+  bool has_comment = lower_sql.find("--") != std::string::npos
+                  || lower_sql.find("/*") != std::string::npos
+                  || lower_sql.find("#") != std::string::npos;
+
+  bool has_semicolon = lower_sql.find(";") != std::string::npos;
+
+  size_t single_quotes = std::count(sql.begin(), sql.end(), '\'');
+  bool has_unbalanced_quotes = (single_quotes % 2 != 0);
+
+  if ((has_logic && has_unbalanced_quotes) || has_comment || has_semicolon) {
+      std::cout << "\nAttempted SQL injection detected. Query rejected." << std::endl;
+      return false;
+  }
 
   char* error_message;
   if(sqlite3_exec(db, sql.c_str(), callback, &records, &error_message) != SQLITE_OK)
