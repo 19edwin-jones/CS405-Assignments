@@ -3,7 +3,8 @@
 
 #include <iomanip>
 #include <iostream>
-
+#include <string>      // Required for std::string
+#include <limits>      // Required for std::numeric_limits
 int main()
 {
   std::cout << "Buffer Overflow Example" << std::endl;
@@ -16,11 +17,20 @@ int main()
 
   const std::string account_number = "CharlieBrown42";
   char user_input[20];
+
   std::cout << "Enter a value: ";
-  std::cin >> user_input;
+  std::cin.getline(user_input, sizeof(user_input));
+
+  if (std::cin.fail()) { 
+    std::cin.clear(); // Reset error flags in stream
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Skip any char still in buffer
+    std::cerr << "Error: Input too long. Buffer overflow prevented." << std::endl;
+    return 1;
+  }
 
   std::cout << "You entered: " << user_input << std::endl;
   std::cout << "Account Number = " << account_number << std::endl;
+  return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
