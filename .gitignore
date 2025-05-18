@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Archives
+*.zip
+
+# Misc
+*.pdf
