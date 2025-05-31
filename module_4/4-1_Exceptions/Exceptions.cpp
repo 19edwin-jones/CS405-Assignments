@@ -33,20 +33,27 @@ void do_custom_application_logic()
 float divide(float num, float den)
 {
   // TODO: Throw an exception to deal with divide by zero errors using
-  //  a standard C++ defined exception
+  //  a standard C++ defined exception✓
+  if (den == 0) {
+    throw std::runtime_error("Attempted to divide by zero.\n");
+  }
   return (num / den);
 }
 
 void do_division() noexcept
 {
   //  TODO: create an exception handler to capture ONLY the exception thrown
-  //  by divide.
+  //  by divide.✓
 
   float numerator = 10.0f;
   float denominator = 0;
 
-  auto result = divide(numerator, denominator);
-  std::cout << "divide(" << numerator << ", " << denominator << ") = " << result << std::endl;
+  try {
+    auto result = divide(numerator, denominator);
+    std::cout << "divide(" << numerator << ", " << denominator << ") = " << result << std::endl;
+  } catch (const std::runtime_error& e) {
+    std::cerr << "\tException occured: " << e.what();
+  }
 }
 
 int main()
