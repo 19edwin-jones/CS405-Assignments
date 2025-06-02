@@ -36,3 +36,13 @@
 
 # Misc
 *.pdf
+
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+# Build directories
+build/
+# Generated files
+*.cmake
+.cache/
+*.dSYM
