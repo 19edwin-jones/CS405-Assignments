@@ -29,12 +29,14 @@ std::string encrypt_decrypt(const std::string &source, const std::string &key) {
   std::string output = source;
 
   // loop through the source string char by char
-  for (size_t i = 0; i < source_length;
-       ++i) { // TODO: student need to change the next line from output[i] =
-              // source[i]
-    // transform each character based on an xor of the key modded constrained to
-    // key length using a mod
-    output[i] = source[i];
+  for (size_t i = 0; i < source_length; ++i) {
+    // DONE: student need to change the next line from
+    // output[i] = source[i] transform each character based on
+    // an xor of the key modded constrained to key length using a mod
+
+    // XOR each character with the corresponding character in the
+    // key, wrapping around if needed
+    output[i] = source[i] ^ key[i % key_length];
   }
 
   // our output length must equal our source length
@@ -47,7 +49,18 @@ std::string encrypt_decrypt(const std::string &source, const std::string &key) {
 std::string read_file(const std::string &filename) {
   std::string file_text = "John Q. Smith\nThis is my test string";
 
-  // TODO: implement loading the file into a string
+  // DONE: implement loading the file into a string
+  std::ifstream file(filename);
+  if (file.is_open()) {
+    std::ostringstream ss;
+
+    ss << file.rdbuf();   // read the file into a string stream
+    file_text = ss.str(); // convert the string stream to a string
+
+    file.close();
+  } else {
+    std::cerr << "Could not open file: " << filename << std::endl;
+  }
 
   return file_text;
 }
@@ -69,12 +82,30 @@ std::string get_student_name(const std::string &string_data) {
 void save_data_file(const std::string &filename,
                     const std::string &student_name, const std::string &key,
                     const std::string &data) {
-  //  TODO: implement file saving
-  //  file format
+  //  DONE: implement file saving file format
   //  Line 1: student name
   //  Line 2: timestamp (yyyy-mm-dd)
   //  Line 3: key used
   //  Line 4+: data
+  std::ofstream file(filename);
+  if (file.is_open()) {
+    // write the student name
+    file << student_name << std::endl;
+
+    // write the current date in yyyy-mm-dd format
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    file << std::put_time(ltm, "%Y-%m-%d") << std::endl;
+
+    // write the key used
+    file << key << std::endl;
+
+    // write the data
+    file << data << std::endl;
+    file.close();
+  } else {
+    std::cerr << "Could not open file: " << filename << std::endl;
+  }
 }
 
 int main() {
