@@ -1,4 +1,4 @@
-# Prerequisites
+ Prerequisites
 *.d
 
 # Compiled Object files
@@ -34,15 +34,17 @@
 # Archives
 *.zip
 
-# Misc
-*.pdf
-
-# CMake files
+# CMake
 CMakeCache.txt
 CMakeFiles/
-# Build directories
 build/
-# Generated files
 *.cmake
 .cache/
+
+# Generated files
+*.txt
+
+# Misc
+*.pdf
 *.dSYM
+~$*
