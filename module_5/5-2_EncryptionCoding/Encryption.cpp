@@ -18,7 +18,7 @@
 std::string encrypt_decrypt(const std::string &source, const std::string &key) {
   // get lengths now instead of calling the function every time.
   // this would have most likely been inlined by the compiler, but design for
-  // perfomance.
+  // performance.
   const auto key_length = key.length();
   const auto source_length = source.length();
 
@@ -109,7 +109,7 @@ void save_data_file(const std::string &filename,
 }
 
 int main() {
-  std::cout << "Encyption Decryption Test!" << std::endl;
+  std::cout << "Encryption Decryption Test!" << std::endl;
 
   // input file format
   // Line 1: <students name>
