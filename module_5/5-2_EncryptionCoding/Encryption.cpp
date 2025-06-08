@@ -132,7 +132,7 @@ int main() {
 
   const std::string file_name = "inputdatafile.txt";
   const std::string encrypted_file_name = "encrypteddatafile.txt";
-  const std::string decrypted_file_name = "decrytpteddatafile.txt";
+  const std::string decrypted_file_name = "decrypteddatafile.txt";
   const std::string source_string = read_file(file_name);
   const std::string key = "password";
 
