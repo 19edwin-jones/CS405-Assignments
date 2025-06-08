@@ -16,9 +16,8 @@
 /// <param name="key">key to use in encryption / decryption</param>
 /// <returns>transformed string</returns>
 std::string encrypt_decrypt(const std::string &source, const std::string &key) {
-  // get lengths now instead of calling the function every time.
-  // this would have most likely been inlined by the compiler, but design for
-  // performance.
+  // get lengths now instead of calling the function every time. this would have
+  // most likely been inlined by the compiler, but design for performance.
   const auto key_length = key.length();
   const auto source_length = source.length();
 
