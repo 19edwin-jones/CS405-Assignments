@@ -1,0 +1,40 @@
+/Users/edwinjones/Library/Mobile Documents/com~apple~CloudDocs/SNHU/CS-405/module_5/5-3_StaticCodeAnalysis/QuestionableCode.cpp:53:31: warning: 'DontThrow' has a non-throwing exception specification but can still throw [clang-diagnostic-exceptions]
+   53 |   void DontThrow() noexcept { throw "Ha! I threw anyway!"; }
+      |                               ^
+/Users/edwinjones/Library/Mobile Documents/com~apple~CloudDocs/SNHU/CS-405/module_5/5-3_StaticCodeAnalysis/QuestionableCode.cpp:53:8: note: function declared non-throwing here
+   53 |   void DontThrow() noexcept { throw "Ha! I threw anyway!"; }
+      |        ^           ~~~~~~~~
+/Users/edwinjones/Library/Mobile Documents/com~apple~CloudDocs/SNHU/CS-405/module_5/5-3_StaticCodeAnalysis/QuestionableCode.cpp:58:6: warning: Address of stack memory associated with local variable 'b' is still referred to by the caller variable 'a' upon returning to the caller.  This will be a dangling reference [clang-analyzer-core.StackAddressEscape]
+   57 |   int b = 1;
+      |   ~~~~~~~~~
+   58 |   *a = &b;
+      |      ^
+/Users/edwinjones/Library/Mobile Documents/com~apple~CloudDocs/SNHU/CS-405/module_5/5-3_StaticCodeAnalysis/QuestionableCode.cpp:58:6: note: Address of stack memory associated with local variable 'b' is still referred to by the caller variable 'a' upon returning to the caller.  This will be a dangling reference
+   57 |   int b = 1;
+      |   ~~~~~~~~~
+   58 |   *a = &b;
+      |      ^
+/Users/edwinjones/Library/Mobile Documents/com~apple~CloudDocs/SNHU/CS-405/module_5/5-3_StaticCodeAnalysis/QuestionableCode.cpp:102:3: warning: Value stored to 'tok' is never read [clang-analyzer-deadcode.DeadStores]
+  102 |   tok = tok->next();
+      |   ^     ~~~~~~~~~~~
+/Users/edwinjones/Library/Mobile Documents/com~apple~CloudDocs/SNHU/CS-405/module_5/5-3_StaticCodeAnalysis/QuestionableCode.cpp:102:3: note: Value stored to 'tok' is never read
+  102 |   tok = tok->next();
+      |   ^     ~~~~~~~~~~~
+/Users/edwinjones/Library/Mobile Documents/com~apple~CloudDocs/SNHU/CS-405/module_5/5-3_StaticCodeAnalysis/QuestionableCode.cpp:102:9: warning: Called C++ object pointer is null [clang-analyzer-core.CallAndMessage]
+  102 |   tok = tok->next();
+      |         ^~~
+/Users/edwinjones/Library/Mobile Documents/com~apple~CloudDocs/SNHU/CS-405/module_5/5-3_StaticCodeAnalysis/QuestionableCode.cpp:100:10: note: Assuming pointer value is null
+  100 |   while (tok)
+      |          ^~~
+/Users/edwinjones/Library/Mobile Documents/com~apple~CloudDocs/SNHU/CS-405/module_5/5-3_StaticCodeAnalysis/QuestionableCode.cpp:100:3: note: Loop condition is false. Execution continues on line 102
+  100 |   while (tok)
+      |   ^
+/Users/edwinjones/Library/Mobile Documents/com~apple~CloudDocs/SNHU/CS-405/module_5/5-3_StaticCodeAnalysis/QuestionableCode.cpp:102:9: note: Called C++ object pointer is null
+  102 |   tok = tok->next();
+      |         ^~~
+/Users/edwinjones/Library/Mobile Documents/com~apple~CloudDocs/SNHU/CS-405/module_5/5-3_StaticCodeAnalysis/QuestionableCode.cpp:121:24: warning: result of comparison of constant 3 with expression of type 'bool' is always false [clang-diagnostic-tautological-constant-out-of-range-compare]
+  121 |   assert(my_function() == 3);
+      |                        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk/usr/include/assert.h:75:25: note: expanded from macro 'assert'
+   75 |     (__builtin_expect(!(e), 0) ? __assert_rtn(__func__, __ASSERT_FILE_NAME, __LINE__, #e) : (void)0)
+      |                         ^

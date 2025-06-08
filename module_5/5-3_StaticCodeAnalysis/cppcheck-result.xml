@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results version="2">
+    <cppcheck version="2.17.1"/>
+    <errors>
+        <error id="assignmentInAssert" severity="warning" msg="Assert statement modifies &apos;z&apos;." verbose="Variable &apos;z&apos; is modified inside assert statement. Assert statements are removed from release builds so the code inside assert statement is not executed. If the code is needed also in release builds, this is a bug." cwe="398" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="119" column="12"/>
+            <symbol>z</symbol>
+        </error>
+        <error id="assertWithSideEffect" severity="warning" msg="Assert statement calls a function which may have desired side effects: &apos;my_function&apos;." verbose="Non-pure function: &apos;my_function&apos; is called inside assert statement. Assert statements are removed from release builds so the code inside assert statement is not executed. If the code is needed also in release builds, this is a bug." cwe="398" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="121" column="10"/>
+            <symbol>my_function</symbol>
+        </error>
+        <error id="uselessAssignmentPtrArg" severity="warning" msg="Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?" verbose="Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?" cwe="398" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="102" column="3"/>
+        </error>
+        <error id="autoVariables" severity="error" msg="Address of local auto-variable assigned to a function parameter." verbose="Dangerous assignment - the function parameter is assigned the address of a local auto-variable. Local auto-variables are reserved from the stack which is freed when the function ends. So the pointer to a local variable is invalid after the function ends." cwe="562" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="58" column="3"/>
+        </error>
+        <error id="compareBoolExpressionWithInt" severity="warning" msg="Comparison of a boolean expression with an integer other than 0 or 1." verbose="Comparison of a boolean expression with an integer other than 0 or 1." cwe="398" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="121" column="24"/>
+        </error>
+        <error id="returnNonBoolInBooleanFunction" severity="style" msg="Non-boolean value returned from function returning bool" verbose="Non-boolean value returned from function returning bool" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="92" column="3"/>
+        </error>
+        <error id="arrayIndexOutOfBoundsCond" severity="warning" msg="Either the condition &apos;count==1000&apos; is redundant or the array &apos;buf[10]&apos; is accessed at index 1000, which is out of bounds." verbose="Either the condition &apos;count==1000&apos; is redundant or the array &apos;buf[10]&apos; is accessed at index 1000, which is out of bounds." cwe="788" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="64" column="8" info="Array index out of bounds"/>
+            <location file="QuestionableCode.cpp" line="63" column="13" info="Assuming that condition &apos;count==1000&apos; is not redundant"/>
+        </error>
+        <error id="uninitMemberVarPrivate" severity="warning" msg="Member variable &apos;A::x&apos; is not initialized in the copy constructor." verbose="Member variable &apos;A::x&apos; is not initialized in the copy constructor. Member variables of native types, pointers, or references are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior." cwe="398" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="46" column="3"/>
+            <symbol>A::x</symbol>
+        </error>
+        <error id="functionStatic" severity="performance" msg="Technically the member function &apos;MySpecialType::DontThrow&apos; can be static (but you may consider moving to unnamed namespace)." verbose="The member function &apos;MySpecialType::DontThrow&apos; can be made a static function. Making a function static can bring a performance benefit since no &apos;this&apos; instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to an unnamed namespace." cwe="398" inconclusive="true" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="53" column="8"/>
+            <symbol>MySpecialType::DontThrow</symbol>
+        </error>
+        <error id="functionStatic" severity="performance" msg="Technically the member function &apos;Token::next&apos; can be static (but you may consider moving to unnamed namespace)." verbose="The member function &apos;Token::next&apos; can be made a static function. Making a function static can bring a performance benefit since no &apos;this&apos; instance is passed to the function. This change should not cause compiler errors but it does not necessarily make sense conceptually. Think about your design and the task of the function first - is it a function that must not access members of class instances? And maybe it is more appropriate to move this function to an unnamed namespace." cwe="398" inconclusive="true" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="96" column="10"/>
+            <symbol>Token::next</symbol>
+        </error>
+        <error id="throwInNoexceptFunction" severity="error" msg="Exception thrown in function declared not to throw exceptions." verbose="Exception thrown in function declared not to throw exceptions." cwe="398" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="53" column="31"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;tok&apos; is redundant or there is possible null pointer dereference: tok." verbose="Either the condition &apos;tok&apos; is redundant or there is possible null pointer dereference: tok." cwe="476" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="102" column="9" info="Null pointer dereference"/>
+            <location file="QuestionableCode.cpp" line="100" column="10" info="Assuming that condition &apos;tok&apos; is not redundant"/>
+            <symbol>tok</symbol>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;buf&apos; can be reduced." verbose="The scope of the variable &apos;buf&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="62" column="7"/>
+            <symbol>buf</symbol>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &apos;x&apos; shadows outer variable" verbose="Local variable &apos;x&apos; shadows outer variable" cwe="398" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="124" column="9" info="Shadow variable"/>
+            <location file="QuestionableCode.cpp" line="109" column="7" info="Shadowed declaration"/>
+            <symbol>x</symbol>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &apos;y&apos; shadows outer variable" verbose="Local variable &apos;y&apos; shadows outer variable" cwe="398" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="125" column="9" info="Shadow variable"/>
+            <location file="QuestionableCode.cpp" line="110" column="7" info="Shadowed declaration"/>
+            <symbol>y</symbol>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &apos;z&apos; shadows outer variable" verbose="Local variable &apos;z&apos; shadows outer variable" cwe="398" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="126" column="9" info="Shadow variable"/>
+            <location file="QuestionableCode.cpp" line="111" column="7" info="Shadowed declaration"/>
+            <symbol>z</symbol>
+        </error>
+        <error id="invalidContainer" severity="error" msg="Using iterator to local container &apos;items&apos; that may be invalid." verbose="Using iterator to local container &apos;items&apos; that may be invalid." cwe="664" inconclusive="true" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="82" column="30"/>
+            <location file="QuestionableCode.cpp" line="77" column="20" info="Variable created here."/>
+            <location file="QuestionableCode.cpp" line="84" column="13" info="After calling &apos;erase&apos;, iterators or references to the container&apos;s data may be invalid ."/>
+            <location file="QuestionableCode.cpp" line="82" column="35" info="Assuming condition is true."/>
+            <location file="QuestionableCode.cpp" line="83" column="15" info="Assuming condition is true."/>
+            <location file="QuestionableCode.cpp" line="83" column="15" info="Assuming condition is true."/>
+            <location file="QuestionableCode.cpp" line="82" column="26" info="Iterator to container is created here."/>
+        </error>
+        <error id="unusedStructMember" severity="style" msg="class member &apos;A::x&apos; is never used." verbose="class member &apos;A::x&apos; is never used." cwe="563" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="45" column="7"/>
+            <symbol>A::x</symbol>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;buf[count]&apos; is assigned a value that is never used." verbose="Variable &apos;buf[count]&apos; is assigned a value that is never used." cwe="563" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="64" column="16"/>
+            <symbol>buf[count]</symbol>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;tok&apos; is assigned a value that is never used." verbose="Variable &apos;tok&apos; is assigned a value that is never used." cwe="563" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="102" column="7"/>
+            <symbol>tok</symbol>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;x&apos; is assigned a value that is never used." verbose="Variable &apos;x&apos; is assigned a value that is never used." cwe="563" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="109" column="7"/>
+            <symbol>x</symbol>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;y&apos; is assigned a value that is never used." verbose="Variable &apos;y&apos; is assigned a value that is never used." cwe="563" file0="QuestionableCode.cpp">
+            <location file="QuestionableCode.cpp" line="110" column="7"/>
+            <symbol>y</symbol>
+        </error>
+        <error id="unusedFunction" severity="style" msg="The function &apos;is_type&apos; is never used." verbose="The function &apos;is_type&apos; is never used." cwe="561">
+            <location file="QuestionableCode.cpp" line="37" column="0"/>
+            <symbol>is_type</symbol>
+        </error>
+        <error id="unusedFunction" severity="style" msg="The function &apos;DontThrow&apos; is never used." verbose="The function &apos;DontThrow&apos; is never used." cwe="561">
+            <location file="QuestionableCode.cpp" line="53" column="0"/>
+            <symbol>DontThrow</symbol>
+        </error>
+        <error id="unusedFunction" severity="style" msg="The function &apos;do_something_useless&apos; is never used." verbose="The function &apos;do_something_useless&apos; is never used." cwe="561">
+            <location file="QuestionableCode.cpp" line="67" column="0"/>
+            <symbol>do_something_useless</symbol>
+        </error>
+        <error id="checkersReport" severity="information" msg="Active checkers: 179/856 (use --checkers-report=&lt;filename&gt; to see details)" verbose="Active checkers: 179/856 (use --checkers-report=&lt;filename&gt; to see details)"/>
+    </errors>
+</results>
