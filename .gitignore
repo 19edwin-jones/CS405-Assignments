@@ -42,7 +42,7 @@ build/
 .cache/
 
 # Generated files
-*.txt
+# *.txt
 
 # Misc
 *.pdf
