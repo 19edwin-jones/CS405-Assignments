@@ -220,6 +220,7 @@ TEST_F(CollectionTest, ClearErasesCollection) {
 }
 
 // DONE: Create a test to verify erase(begin,end) erases the collection
+//
 TEST_F(CollectionTest, EraseRangeErasesCollection) {
   // Add some entries to the collection
   add_entries(5);
@@ -273,25 +274,17 @@ TEST_F(CollectionTest, AtThrowsOutOfRange) {
 TEST_F(CollectionTest, SwapContents) {
   // Add some entries to the collection
   add_entries(5);
-  EXPECT_EQ(collection->size(), 5);
-  std::vector<int> collectionOriginal = *collection;
 
-  // Create another collection and add some different entries
-  std::vector<int> otherCollection;
-  for (int i = 0; i < 5; ++i) {
-    otherCollection.push_back(rand() % 100 + 100); // Different range
-  }
-  std::vector<int> otherCollectionOriginal = otherCollection;
+  // Create another collection with different values
+  std::vector<int> otherCollection(5, 100);
+  // Create copy of the current collection for comparison
+  std::vector<int> before = *collection;
 
-  // Swap contents
+  // Swap contents of the two collections
   collection->swap(otherCollection);
 
-  // Check that the contents have been swapped
-  ASSERT_EQ(*collection, otherCollectionOriginal);
-  ASSERT_NE(*collection, collectionOriginal);
-
-  ASSERT_EQ(otherCollection, collectionOriginal);
-  ASSERT_NE(otherCollection, otherCollectionOriginal);
+  ASSERT_EQ(*collection, std::vector<int>(5, 100));
+  ASSERT_EQ(otherCollection, before);
 }
 
 // Negative test to verify that accessing an out-of-bounds index throws
@@ -304,8 +297,7 @@ TEST_F(CollectionTest, AccessOutOfBoundsThrows) {
   // Attempt to access an element at an out-of-bounds index
   ASSERT_THROW(
       {
-        collection->at(
-            10); // Index 10 is out of bounds for a collection of size 5
+        collection->at(10); // Index 10 is out of bounds for a collection of size 5
       },
-      std::out_of_range);
+    std::out_of_range);
 }
